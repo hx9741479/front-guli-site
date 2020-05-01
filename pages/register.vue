@@ -10,21 +10,21 @@
       <form action="register">
         <div class="input-prepend restyle">
           <input
-            v-model="params.nickname"
+            v-model="member.nickname"
             type="text"
             placeholder="你的昵称">
           <i class="iconfont icon-user"/>
         </div>
         <div class="input-prepend restyle no-radius">
           <input
-            v-model="params.mobile"
+            v-model="member.mobile"
             type="text"
             placeholder="手机号">
           <i class="iconfont icon-phone"/>
         </div>
         <div class="input-prepend restyle no-radius" style="position:relative">
           <input
-            v-model="params.code"
+            v-model="member.code"
             type="text"
             placeholder="验证码">
           <i class="iconfont icon-yanzhengma"/>
@@ -36,7 +36,7 @@
         </div>
         <div class="input-prepend">
           <input
-            v-model="params.password"
+            v-model="member.password"
             type="password"
             placeholder="设置密码">
           <i class="iconfont icon-password"/>
@@ -71,16 +71,17 @@
 <script>
 import '~/assets/css/sign.css'
 import '~/assets/css/iconfont.css'
+import registerApi from '@/api/register'
 
 export default {
   layout: 'sign',
   data() {
     return {
-      params: {
-        mobile: '',
-        code: '',
-        nickname: '',
-        password: ''
+      member: {
+        // mobile: '',
+        // code: '',
+        // nickname: '',
+        // password: ''
       },
       sending: false, // 是否发送验证码
       second: 60, // 倒计时间
@@ -90,17 +91,43 @@ export default {
   methods: {
     // 获取验证码
     getCodeFun() {
-
+      // this.sending原为false,
+      // 点击后立即使 this.sending == true，防止有人多次点击
+      if (this.sending) { return }
+      this.sending = true
+      registerApi.sendMessage(this.member.mobile).then(response => {
+        this.timeDown()
+        this.$message({
+          type: 'success',
+          message: '短信发送成功'
+        })
+      })
     },
 
     // 倒计时
     timeDown() {
-
+      const result = setInterval(() => {
+        this.second--
+        this.codeText = this.second
+        if (this.second < 1) {
+          clearInterval(result)
+          this.sending = false
+          this.second = 60
+          this.codeText = '获取验证码'
+        }
+      }, 1000)
     },
 
     // 注册
     submitRegister() {
-
+      registerApi.register(this.member).then(response => {
+        // 提示注册成功
+        this.$message({
+          type: 'success',
+          message: '注册成功'
+        })
+        this.$router.push({ path: '/login' })
+      })
     }
   }
 }
