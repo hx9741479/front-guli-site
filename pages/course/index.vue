@@ -85,8 +85,11 @@
                 </a>
               </li>
               <li :class="{'current bg-green': $route.query.priceSort}">
-                <a title="价格" href="javascript:void(0);" @click="searchPrice()">价格&nbsp;
+                <a v-if="!$route.query.type || $route.query.type == 1" title="价格" href="javascript:void(0);" @click="searchPrice(2)">价格&nbsp;
                   <span>↓</span>
+                </a>
+                <a v-if="$route.query.type == 2" title="价格" href="javascript:void(0);" @click="searchPrice(1)">价格&nbsp;
+                  <span>↑</span>
                 </a>
               </li>
             </ol>
@@ -158,6 +161,7 @@ export default {
     searchObj.buyCountSort = query.buyCountSort || ''
     searchObj.gmtCreateSort = query.gmtCreateSort || ''
     searchObj.priceSort = query.priceSort || ''
+    searchObj.type = query.type || ''
 
     // 获取课程分类嵌套列表
     const subjectNestedListResponse = await courseApi.getSubjectNestedList()
@@ -232,12 +236,13 @@ export default {
     },
 
     // 选择按价格倒序
-    searchPrice() {
+    searchPrice(type) {
       // 自动组装queryString
       const obj = {
         subjectParentId: this.searchObj.subjectParentId,
         subjectId: this.searchObj.subjectId,
-        priceSort: 1
+        priceSort: 1,
+        type: type
       }
       const querys = querystring.stringify(obj)
       window.location = '/course?' + querys
