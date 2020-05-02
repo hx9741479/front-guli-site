@@ -84,6 +84,7 @@
                   <span>↓</span>
                 </a>
               </li>
+
               <li :class="{'current bg-green': $route.query.priceSort}">
                 <a v-if="!$route.query.type || $route.query.type == 1" title="价格" href="javascript:void(0);" @click="searchPrice(2)">价格&nbsp;
                   <span>↓</span>
