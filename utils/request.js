@@ -14,7 +14,6 @@ service.interceptors.request.use(
     // debugger
     if (cookie.get('guli_jwt_token')) { // 如果cookie中包含guli_token
       // 则发送后端api请求的时候携带token
-      console.log('jjjjjjjjj')
       config.headers['token'] = cookie.get('guli_jwt_token')
     }
     return config

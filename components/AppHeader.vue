@@ -96,6 +96,17 @@ export default {
   created() {
     this.getUserInfo()
   },
+  mounted() {
+    // 微信登录url token获取
+    this.token = this.$route.query.token
+    if (this.token) {
+      // 将token存在cookie中
+      cookie.set('guli_jwt_token', this.token, { domain: 'localhost' })
+      // 跳转页面：擦除url中的token
+      // 注意：window对象在created方法中无法被访问，因此要写在mounted中
+      window.location.href = '/'
+    }
+  },
 
   methods: {
     getUserInfo() {
