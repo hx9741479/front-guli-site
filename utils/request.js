@@ -36,6 +36,8 @@ service.interceptors.response.use(
       // 清除cookie
       cookie.set('guli_jwt_token', '', { domain: 'localhost' })
       return response.data // 不显示错误信息
+    } else if (res.code === 25000) { // 支付中
+      return response.data // 不显示错误信息
     } else {
       Message({
         message: res.message,
