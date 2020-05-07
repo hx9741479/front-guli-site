@@ -35,9 +35,21 @@
               <span class="c-fff fsize14">主讲： {{ course.teacherName }}&nbsp;&nbsp;&nbsp;</span>
             </section>
             <section class="c-attr-mt of">
-              <span class="ml10 vam">
+              <span v-if="isCollect" class="ml10 vam sc-end">
                 <em class="icon18 scIcon"/>
-                <a class="c-fff vam" title="收藏" href="#" >收藏</a>
+                <a
+                  style="cursor:pointer"
+                  class="c-fff vam"
+                  title="取消收藏"
+                  @click="removeCollect(course.id)">已收藏</a>
+              </span>
+              <span v-else class="ml10 vam">
+                <em class="icon18 scIcon"/>
+                <span
+                  style="cursor:pointer"
+                  class="c-fff vam"
+                  title="收藏"
+                  @click="addCollect(course.id)" >收藏</span>
               </span>
             </section>
             <section v-if="isBuy || course.price === 0" class="c-attr-mt">
@@ -198,6 +210,7 @@
 import courseApi from '~/api/course'
 import orderApi from '~/api/order'
 import cookie from 'js-cookie'
+import collectApi from '~/api/collect'
 
 export default {
   async asyncData(page) {
@@ -209,6 +222,7 @@ export default {
   },
   data() {
     return {
+      isCollect: false, // 是否已收藏
       isBuy: false // 是否已购买
     }
   },
@@ -221,12 +235,31 @@ export default {
       orderApi.isBuy(this.course.id).then(response => {
         this.isBuy = response.data.isBuy
       })
+      // 判断是否收藏
+      collectApi.isCollect(this.course.id).then(response => {
+        this.isCollect = response.data.isCollect
+      })
     }
   },
   methods: {
     createOrder() {
       orderApi.createOrder(this.course.id).then(response => {
         this.$router.push({ path: '/order/' + response.data.orderId })
+      })
+    },
+    // 收藏
+    addCollect(courseId) {
+      collectApi.addCollect(this.course.id).then(response => {
+        this.isCollect = true
+        this.$message.success(response.message)
+      })
+    },
+
+    // 取消收藏
+    removeCollect(courseId) {
+      collectApi.removeById(this.course.id).then(response => {
+        this.isCollect = false
+        this.$message.success(response.message)
       })
     }
   }
