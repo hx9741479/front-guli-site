@@ -4,7 +4,7 @@ import cookie from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: 'http://localhost:8110',
+  baseURL: 'http://localhost:9110',
   timeout: 12000 // 请求超时时间
 })
 
@@ -38,6 +38,9 @@ service.interceptors.response.use(
       return response.data // 不显示错误信息
     } else if (res.code === 25000) { // 支付中
       return response.data // 不显示错误信息
+    } else if (res.code === 28004) { // 鉴权失败
+      window.location.href = '/login'
+      return
     } else {
       Message({
         message: res.message,

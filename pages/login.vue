@@ -68,7 +68,12 @@ export default {
         // 登录成功后将jwtToken写入cookie
         cookie.set('guli_jwt_token', response.data.token, { domain: 'localhost' })
         // 跳转到首页
-        window.location.href = '/'
+        // window.location.href = '/'
+        if (document.referrer.indexOf('/register') !== -1) {
+          window.location.href = '/'
+        } else {
+          history.go(-1)
+        }
       })
     }
   }

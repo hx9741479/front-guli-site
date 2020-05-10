@@ -5,7 +5,7 @@ export default {
 
   submitLogin(user) {
     return request({
-      baseURL: 'http://localhost:8160',
+      // baseURL: 'http://localhost:8160',
       url: '/api/ucenter/member/login',
       method: 'post',
       data: user
@@ -13,7 +13,7 @@ export default {
   },
   getLoginInfo() {
     return request({
-      baseURL: 'http://localhost:8160',
+      // baseURL: 'http://localhost:8160',
       url: '/api/ucenter/member/get-login-info',
       method: 'get',
       // 通过请求头发送token

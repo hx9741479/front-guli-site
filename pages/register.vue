@@ -126,7 +126,8 @@ export default {
           type: 'success',
           message: '注册成功'
         })
-        this.$router.push({ path: '/login' })
+        // this.$router.push({ path: '/login' })
+        window.location.href = '/login'
       })
     }
   }
